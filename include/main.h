@@ -72,9 +72,11 @@ void opcontrol(void);
 #endif
 
 #ifdef __cplusplus
-/**
- * You can add C++-only headers here
- */
+
+#include "otheaders/drivebase.hpp"
+#include "otheaders/general.hpp"
+#include "otheaders/intake.hpp"
+
 //#include <iostream>
 #endif
 
