@@ -76,6 +76,7 @@ void opcontrol(void);
 #include "otheaders/drivebase.hpp"
 #include "otheaders/general.hpp"
 #include "otheaders/intake.hpp"
+#include "otheaders/tray.hpp"
 
 //#include <iostream>
 #endif
