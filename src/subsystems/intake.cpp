@@ -7,6 +7,6 @@ void setIntake() {
 
   ip = -127 * r + 127 * l;
 
-  intakeL = ip;
-  intakeR = ip;
+  intakeL.move(ip);
+  intakeR.move(ip);
 }

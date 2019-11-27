@@ -77,6 +77,7 @@ void opcontrol(void);
 #include "otheaders/general.hpp"
 #include "otheaders/intake.hpp"
 #include "otheaders/tray.hpp"
+#include "otheaders/arm.hpp"
 
 //#include <iostream>
 #endif
