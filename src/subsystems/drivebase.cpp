@@ -1,7 +1,7 @@
 #include "main.h"
 
 void setDriveMotors() {
-    int ratio = 3; //increase to make drive slower
+    double ratio = 2; //increase to make drive slower
 
     int fbJoy = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     int rlJoy = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
