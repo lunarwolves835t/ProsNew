@@ -22,25 +22,29 @@ void setDriveMotors() {
     printf("%f %f", speedRight, speedLeft);
 }
 
-void tturn(int distance, int direction, float ratio) {
-  int fbJoy = 0;
+void tturn(int distance, int direction, double ratio) {
+  driveFR.tare_position();
+  driveBR.tare_position();
+  driveFL.tare_position();
+  driveBL.tare_position();
+
   int rlJoy = direction * 127;
 
-  fbJoy = abs(fbJoy) < 10 ? 0 : fbJoy;
   rlJoy = abs(rlJoy) < 10 ? 0 : rlJoy;
 
-  double speedRight = rlJoy * 0.7 - fbJoy;
+  double motorSpeed =  rlJoy * 0.7;
+  motorSpeed /= ratio;
 
-  double speedLeft = rlJoy * 0.7 + fbJoy;
+  double avgChange = (driveFR.get_position() +
+                      driveBR.get_position() +
+                      driveFL.get_position() +
+                      driveBL.get_position()) / 2;
 
-  speedRight /= ratio;
-  speedLeft /= ratio;
-
-  for (int i = 0; i < distance; i++) {
-    driveFR.move(speedRight);
-    driveBR.move(speedRight);
-    driveFL.move(speedLeft);
-    driveBL.move(speedLeft);
+  while (avgChange < distance) {
+    driveFR.move(motorSpeed);
+    driveBR.move(motorSpeed);
+    driveFL.move(motorSpeed);
+    driveBL.move(motorSpeed);
   }
 }
 

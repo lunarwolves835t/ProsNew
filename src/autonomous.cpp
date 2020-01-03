@@ -9,5 +9,5 @@ void autonomous(){
   //mov(5, 50);
   pros::lcd::print(0, "Autonomous");
   movement(3250, 60, 60);
-  tturn(5, -1, 50);
+  tturn(500, -1, 2.5);
 }
