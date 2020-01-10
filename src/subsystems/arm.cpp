@@ -8,7 +8,7 @@ void setArm() {
 
   if (!r && !l) {
     arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    arm.move_velocity(0); //你是一个傻瓜
+    arm.move_velocity(0);
   } else {
     int sp = 127 * (l - r) / ratio;
 

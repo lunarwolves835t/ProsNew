@@ -5,6 +5,8 @@ void opcontrol() {
     setDriveMotors();
     setIntake();
     setArm();
+    setTray();
+    moonwalk();
 
     pros::delay(10);
   }
