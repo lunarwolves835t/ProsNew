@@ -1,6 +1,7 @@
 #include "main.h"
 
 void opcontrol() {
+
   while (true) {
 
     if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
@@ -13,6 +14,7 @@ void opcontrol() {
     }
     else{
       deploy();
+      killSwitch();
     }
 
 

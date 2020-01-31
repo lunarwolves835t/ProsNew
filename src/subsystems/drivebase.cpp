@@ -2,6 +2,8 @@
 #include <iostream>
 #include "main.h"
 
+bool kill = false;
+
 void drive(double left, double right) {
   driveFR.move(-right);
   driveBR.move(-right);
@@ -10,7 +12,7 @@ void drive(double left, double right) {
 }
 
 void setDriveMotors() {
-    double ratio = 1.5; //increase to make drive slower
+    double ratio = 1; //increase to make drive slower
 
     int fbJoy = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     int rlJoy = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
@@ -23,6 +25,10 @@ void setDriveMotors() {
 
     double speedLeft = rlJoy * 0.7 + fbJoy;
     speedLeft /= ratio;
+
+    if (speedLeft != 0 || speedRight != 0) {
+      kill = false;
+    }
 
     drive(speedLeft, -speedRight);
     printf("%f %f", speedRight, speedLeft);
@@ -39,12 +45,19 @@ void movement(int units, int leftVoltage, int rightVoltage) {
     driveFL.tare_position();
     driveBL.tare_position();
 
-    while (driveFL.get_position() < units) {
+    float averagePos = 0;
+
+    while (averagePos < units) {
       drive(leftVoltage, rightVoltage);
       intakeL.move(127);
       intakeR.move(127);
 
       arm.move(40);
+
+      averagePos = (fabs(driveFR.get_position()) +
+                   fabs(driveBR.get_position()) +
+                   fabs(driveFL.get_position()) +
+                   fabs(driveBL.get_position())) / 4.0;
 
       pros::delay(10);
     }
@@ -60,31 +73,42 @@ void movement(int units, int leftVoltage, int rightVoltage) {
 }
 
 void deploy() {
-  int trayDistance = 3060; //2800 2900
-  int pushDistance = 150; // 400 500
+  int trayDistance = 3080; //2800 2900
+  int pushDistance = 15; // 400 500
   int outtakeDistance = 500;
   int trayBack = 3100;
 
-  int traySpeed = 80;
+  int traySpeed = 65;
   int intakeSpeed = 70;
   int driveSpeed = 50;
 
 
-  // tray out until 90*
-  tray.tare_position();
-  tray.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+  killSwitch();
+  if (!kill) {
+    // tray out until 90*
+    tray.tare_position();
+    tray.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
-  while (tray.get_position() > -trayDistance) {
-    tray.move(-traySpeed);
-    //std::string thing = std::to_string(tray.get_position());
+    while (tray.get_position() > -trayDistance) {
+      killSwitch();
+      if (!kill) {
+        tray.move(-traySpeed);
+        //std::string thing = std::to_string(tray.get_position());
 
-    //const char* value = thing.c_str();
+        //const char* value = thing.c_str();
 
-    //controller.set_text(0, 0, value);
+        //controller.set_text(0, 0, value);
+      }
+      else {
+        break;
+      }
+    }
+
+    tray.move(0);
+    tray.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
 
-  tray.move(0);
-  tray.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  killSwitch();
 
   pros::delay(200);
 
@@ -95,9 +119,16 @@ void deploy() {
 
   int ratio = 2;
 
-  // while (driveFL.get_position() < pushDistance) {
-  //   drive(driveSpeed / ratio, driveSpeed / ratio);
-  // }
+  while (driveFL.get_position() < pushDistance) {
+    killSwitch();
+
+    if (!kill) {
+      drive(driveSpeed / ratio, driveSpeed / ratio);
+    }
+    else {
+      break;
+    }
+  }
 
   drive(0, 0);
 
@@ -110,15 +141,24 @@ void deploy() {
   driveFL.tare_position();
   driveBL.tare_position();
 
-  int reduction = 2;
+  killSwitch();
+  double reduction = 0.5;
+  if (!kill) {
+    intakeL.move(-intakeSpeed * 1.5f);
+    intakeR.move(-intakeSpeed * 1.5f);
 
-  intakeL.move(-intakeSpeed * 2);
-  intakeR.move(-intakeSpeed * 2);
+    pros::delay(350);
+  }
 
-  pros::delay(1000);
 
   while (driveFL.get_position() > -outtakeDistance) {
-    drive(-driveSpeed / reduction, -driveSpeed / reduction);
+    killSwitch();
+    if (!kill) {
+      drive(-driveSpeed / reduction, -driveSpeed / reduction);
+    }
+    else {
+      break;
+    }
   }
 
   intakeL.move(0);
@@ -128,11 +168,41 @@ void deploy() {
   //tray back
 
   tray.tare_position();
-  tray.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
-  while (tray.get_position() < trayBack) {
-    tray.move(traySpeed);
+  killSwitch();
+
+  if (!kill) {
+    tray.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+    while (tray.get_position() < trayBack) {
+      if (!kill) {
+        tray.move(traySpeed);
+      }
+      else {
+        break;
+      }
+    }
+
+    tray.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
-
-  tray.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
+
+void killSwitch() {
+  bool k = controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
+
+  if (k) {
+    kill = true;
+  }
+}
+//
+// void turn(int degrees, int Voltage) { //- | + for left | right
+//   int current_rotation = inertS.get_rotation();
+//
+//   Voltage *= degrees < 0 ? -1 : 1;
+//
+//   while (inertS.get_rotation() < degrees) {
+//     drive(Voltage, -Voltage);
+//     pros::delay(10);
+//
+//   }
+// }

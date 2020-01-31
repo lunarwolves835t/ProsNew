@@ -11,21 +11,23 @@ void checkRelease() {
 void release() {
   pros::delay(50);
 
-  for (int i = 0; i < 200; i++) {
-    intakeL.move(-127);
-    intakeR.move(-127);
+  for (int i = 0; i < 65; i++) {
+    //intakeL.move(-127);
+    //intakeR.move(-127);
     arm.move(127);
+    tray.move(-80);
 
     pros::delay(10);
   }
 
-  pros::delay(500);
+  pros::delay(300);
 
   intakeL.move(0);
   intakeR.move(0);
 
-  for (int i = 0; i < 50; i++) {
+  for (int i = 0; i < 65; i++) {
     arm.move(-127);
+    tray.move(70);
 
     pros::delay(10);
   }

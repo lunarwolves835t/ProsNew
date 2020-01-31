@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/imu.h"
 
 //motor definitions
 extern pros::Motor driveFR;
@@ -15,3 +16,5 @@ extern pros::Motor tray;
 //controller
 
 extern pros::Controller controller;
+
+extern pros::Imu inertS;

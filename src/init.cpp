@@ -2,7 +2,7 @@
 
 void initialize() {
   pros::lcd::initialize();
-  pros::lcd::set_text(0, "Lunar Wolves 845T");
+  pros::lcd::set_text(0, "Lunar Wolves 835T");
 
   driveFR.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   driveFL.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -14,4 +14,5 @@ void initialize() {
 
   intakeL.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   intakeR.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  //inertS.reset();
 }

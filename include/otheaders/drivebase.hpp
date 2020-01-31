@@ -9,3 +9,7 @@ void tturn(int distance, int direction, float ratio);
 void drive(double left, double right);
 
 void deploy();
+
+void killSwitch();
+
+void turn(int degrees, int Voltage);
