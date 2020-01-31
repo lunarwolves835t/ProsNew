@@ -9,3 +9,5 @@ void intake(int direction, int distance);
 void release();
 
 void checkRelease();
+
+void runIntake(int voltage);

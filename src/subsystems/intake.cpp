@@ -22,8 +22,7 @@ void release() {
 
   pros::delay(300);
 
-  intakeL.move(0);
-  intakeR.move(0);
+  runIntake(0);
 
   for (int i = 0; i < 65; i++) {
     arm.move(-127);
@@ -33,15 +32,19 @@ void release() {
   }
 }
 
+void runIntake(int voltage) {
+  intakeL.move(voltage);
+  intakeR.move(voltage);
+}
+
 void setIntake() {
   int ip = 0;
   bool r = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
   bool l = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
 
   ip = -127 * r + 127 * l; //127 is outtake, -127 is intake
-
-  intakeL.move(ip);
-  intakeR.move(ip);
+  
+  runIntake(ip);
 }
 
 
@@ -49,8 +52,7 @@ void moonwalk() {
   int ip = -127 * controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
   if (ip) {
     double moonWalkSpeed = -127 * controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) / 3.5;
-    intakeL.move(ip);
-    intakeR.move(ip);
+    runIntake(ip);
 
     drive(moonWalkSpeed, -moonWalkSpeed);
   }
@@ -58,8 +60,7 @@ void moonwalk() {
 
 void intake(int direction, int distance) {
   while (driveFL.get_position() < distance) {
-    intakeL.move(127);
-    intakeR.move(127);
+    runIntake(127);
 
     pros::delay(10);
   }
@@ -70,6 +71,5 @@ void intake(int direction, int distance) {
 
   pros::delay(50);
 
-  intakeL.move(0);
-  intakeR.move(0);
+  runIntake(0);
 }
