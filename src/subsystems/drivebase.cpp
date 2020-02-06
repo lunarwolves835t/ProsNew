@@ -117,18 +117,18 @@ void deploy() {
   driveFL.tare_position();
   driveBL.tare_position();
 
-  int ratio = 2;
-
-  while (driveFL.get_position() < pushDistance) {
-    killSwitch();
-
-    if (!kill) {
-      drive(driveSpeed / ratio, driveSpeed / ratio);
-    }
-    else {
-      break;
-    }
-  }
+  // int ratio = 2;
+  //
+  // while (driveFL.get_position() < pushDistance) {
+  //   killSwitch();
+  //
+  //   if (!kill) {
+  //     drive(driveSpeed / ratio, driveSpeed / ratio);
+  //   }
+  //   else {
+  //     break;
+  //   }
+  // }
 
   drive(0, 0);
 
@@ -144,8 +144,7 @@ void deploy() {
   killSwitch();
   double reduction = 0.5;
   if (!kill) {
-    intakeL.move(-intakeSpeed * 1.5f);
-    intakeR.move(-intakeSpeed * 1.5f);
+    runIntake(-intakeSpeed * 1.5f);
 
     pros::delay(350);
   }
@@ -161,8 +160,7 @@ void deploy() {
     }
   }
 
-  intakeL.move(0);
-  intakeR.move(0);
+  runIntake(0);
   drive(0, 0);
 
   //tray back

@@ -33,8 +33,14 @@ void release() {
 }
 
 void runIntake(int voltage) {
-  intakeL.move(voltage);
-  intakeR.move(voltage);
+  if (voltage == 0) {
+    intakeL.move(0);
+    intakeR.move(0);
+  }
+  else {
+    intakeL.move(voltage);
+    intakeR.move(voltage);
+  }
 }
 
 void setIntake() {
@@ -42,9 +48,16 @@ void setIntake() {
   bool r = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
   bool l = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
 
-  ip = -127 * r + 127 * l; //127 is outtake, -127 is intake
-  
-  runIntake(ip);
+   //127 is outtake, -127 is intake
+
+  if (!r && !l) {
+    intakeL.move(0);
+    intakeR.move(0);
+  }
+  else {
+    ip = -127 * r + 127 * l;
+    runIntake(ip);
+  }
 }
 
 
