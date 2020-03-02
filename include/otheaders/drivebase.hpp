@@ -2,7 +2,7 @@
 
 void setDriveMotors();
 
-void movement(int units, int leftVoltage, int rightVoltage);
+void movement(int units, int leftVoltage, int rightVoltage, bool intake);
 
 void tturn(int distance, int direction, float ratio);
 

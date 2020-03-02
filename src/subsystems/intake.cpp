@@ -11,7 +11,7 @@ void checkRelease() {
 void release() {
   pros::delay(50);
 
-  for (int i = 0; i < 65; i++) {
+  for (int i = 0; i < 35; i++) {
     //intakeL.move(-127);
     //intakeR.move(-127);
     arm.move(127);
@@ -19,17 +19,26 @@ void release() {
 
     pros::delay(10);
   }
+  for(int i = 0; i < 30; i++){
+    tray.move(-80);
+  }
+
 
   pros::delay(300);
 
-  runIntake(0);
 
-  for (int i = 0; i < 65; i++) {
+
+  for (int i = 0; i < 167; i++) {
     arm.move(-127);
     tray.move(70);
 
     pros::delay(10);
   }
+  for(int i = 0; i < 1; i++){
+    arm.move(-6);
+    pros::delay(10);
+  }
+
 }
 
 void runIntake(int voltage) {
@@ -45,8 +54,8 @@ void runIntake(int voltage) {
 
 void setIntake() {
   int ip = 0;
-  bool r = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-  bool l = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
+  bool r = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+  bool l = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
 
    //127 is outtake, -127 is intake
 

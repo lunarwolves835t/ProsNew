@@ -79,6 +79,7 @@ void opcontrol(void);
 #include "otheaders/tray.hpp"
 #include "otheaders/arm.hpp"
 #include "otheaders/auton.hpp"
+#include "otheaders/mecanum.hpp"
 
 //#include <iostream>
 #endif

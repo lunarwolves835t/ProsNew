@@ -35,11 +35,7 @@ void setDriveMotors() {
 }
 
 
-void tturn(int distance, int direction, double ratio) {
-
-}
-
-void movement(int units, int leftVoltage, int rightVoltage) {
+void movement(int units, int leftVoltage, int rightVoltage, bool intake) {
     driveFR.tare_position();
     driveBR.tare_position();
     driveFL.tare_position();
@@ -47,24 +43,21 @@ void movement(int units, int leftVoltage, int rightVoltage) {
 
     float averagePos = 0;
 
+
     while (averagePos < units) {
       drive(leftVoltage, rightVoltage);
       intakeL.move(127);
       intakeR.move(127);
 
-      arm.move(40);
+      pros::delay(10);
 
       averagePos = (fabs(driveFR.get_position()) +
                    fabs(driveBR.get_position()) +
                    fabs(driveFL.get_position()) +
                    fabs(driveBL.get_position())) / 4.0;
-
-      pros::delay(10);
     }
-
     intakeL.move(0);
     intakeR.move(0);
-
     drive(-10, -10);
 
     pros::delay(50);
@@ -81,6 +74,14 @@ void deploy() {
   int traySpeed = 65;
   int intakeSpeed = 70;
   int driveSpeed = 50;
+
+  if (!kill) {
+    runIntake(-intakeSpeed * 1.5f);
+
+    pros::delay(375);
+  }
+
+  runIntake(0);
 
 
   killSwitch();
@@ -146,7 +147,7 @@ void deploy() {
   if (!kill) {
     runIntake(-intakeSpeed * 1.5f);
 
-    pros::delay(350);
+    pros::delay(600);
   }
 
 

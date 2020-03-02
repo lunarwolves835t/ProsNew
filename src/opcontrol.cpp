@@ -5,8 +5,10 @@ void opcontrol() {
   while (true) {
 
     if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+      checkMecanum();
+
       checkRelease();
-      setDriveMotors();
+      //setDriveMotors();
       setIntake();
       setArm();
       setTray();
