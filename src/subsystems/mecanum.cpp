@@ -1,10 +1,11 @@
 #include "main.h"
 
 void driveMecanum(double moveX, double moveY, double turn) {
-  double frontLeft = moveY - moveX + turn;
-  double frontRight = moveY - moveX - turn;
-  double backLeft = moveY + moveX + turn;
-  double backRight = moveY + moveX - turn;
+  double turnFactor = 0.5;
+  double frontLeft = moveY - moveX + turn * turnFactor;
+  double frontRight = moveY - moveX - turn * turnFactor;
+  double backLeft = moveY + moveX + turn * turnFactor;
+  double backRight = moveY + moveX - turn * turnFactor;
 
   driveFL.move(frontLeft);
   driveFR.move(frontRight);
