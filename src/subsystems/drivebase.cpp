@@ -5,8 +5,8 @@
 bool kill = false;
 
 void drive(double left, double right) {
-  driveFR.move(-right);
-  driveBR.move(-right);
+  driveFR.move(right);
+  driveBR.move(right);
   driveFL.move(left);
   driveBL.move(left);
 }
@@ -46,8 +46,8 @@ void movement(int units, int leftVoltage, int rightVoltage, bool intake) {
 
     while (averagePos < units) {
       drive(leftVoltage, rightVoltage);
-      intakeL.move(127);
-      intakeR.move(127);
+      intakeL.move(127*intake);
+      intakeR.move(127*intake);
 
       pros::delay(10);
 
@@ -55,6 +55,9 @@ void movement(int units, int leftVoltage, int rightVoltage, bool intake) {
                    fabs(driveBR.get_position()) +
                    fabs(driveFL.get_position()) +
                    fabs(driveBL.get_position())) / 4.0;
+
+      arm.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+      arm.move(40);
     }
     intakeL.move(0);
     intakeR.move(0);
@@ -65,25 +68,29 @@ void movement(int units, int leftVoltage, int rightVoltage, bool intake) {
     drive(0, 0);
 }
 
+
+
 void deploy() {
   int trayDistance = 3080; //2800 2900
   int pushDistance = 15; // 400 500
   int outtakeDistance = 500;
-  int trayBack = 3100;
+  int trayBack = 3150;
 
   int traySpeed = 65;
   int intakeSpeed = 70;
   int driveSpeed = 50;
 
+// outtakes cubes to ready
   if (!kill) {
     runIntake(-intakeSpeed * 1.5f);
 
-    pros::delay(375);
+    pros::delay(325);
   }
 
   runIntake(0);
 
 
+// brings tray out
   killSwitch();
   if (!kill) {
     // tray out until 90*
@@ -111,13 +118,35 @@ void deploy() {
 
   killSwitch();
 
-  pros::delay(200);
+  pros::delay(500);
 
   driveFR.tare_position();
   driveBR.tare_position();
   driveFL.tare_position();
   driveBL.tare_position();
 
+  tray.tare_position();
+  tray.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+  while (tray.get_position() < 20) {
+    killSwitch();
+    if (!kill) {
+      tray.move(traySpeed);
+      //std::string thing = std::to_string(tray.get_position());
+
+      //const char* value = thing.c_str();
+
+      //controller.set_text(0, 0, value);
+    }
+    else {
+      break;
+    }
+  }
+
+  pros::delay(200);
+  runIntake(-40);
+  pros::delay(12);
+  runIntake(0);
   // int ratio = 2;
   //
   // while (driveFL.get_position() < pushDistance) {
@@ -145,16 +174,17 @@ void deploy() {
   killSwitch();
   double reduction = 0.5;
   if (!kill) {
-    runIntake(-intakeSpeed * 1.5f);
+    runIntake(-intakeSpeed * 0.75f);
 
-    pros::delay(600);
+    pros::delay(1);
   }
 
+pros::delay(500);
 
   while (driveFL.get_position() > -outtakeDistance) {
     killSwitch();
     if (!kill) {
-      drive(-driveSpeed / reduction, -driveSpeed / reduction);
+      driveMecanum(0, -driveSpeed, 0);
     }
     else {
       break;

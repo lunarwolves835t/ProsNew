@@ -1,16 +1,30 @@
 #include "main.h"
 
 void driveMecanum(double moveX, double moveY, double turn) {
-  double turnFactor = 0.5;
-  double frontLeft = moveY - moveX + turn * turnFactor;
-  double frontRight = moveY - moveX - turn * turnFactor;
-  double backLeft = moveY + moveX + turn * turnFactor;
-  double backRight = moveY + moveX - turn * turnFactor;
+  if (getYash() == "prius") {
+    double turnFactor = 0.5;
+    double frontLeft = 0.75 * (moveY - moveX + turn * turnFactor);
+    double frontRight = 0.675 * (moveY - moveX - turn * turnFactor);
+    double backLeft = 0.75 * (moveY + moveX + turn * turnFactor);
+    double backRight = 0.675 * (moveY + moveX - turn * turnFactor);
 
-  driveFL.move(frontLeft);
-  driveFR.move(frontRight);
-  driveBL.move(backLeft);
-  driveBR.move(backRight);
+    driveFL.move(frontLeft);
+    driveFR.move(frontRight);
+    driveBL.move(backLeft);
+    driveBR.move(backRight);
+  }
+  else if (getYash() == "918") {
+    double turnFactor = 0.8;
+    double frontLeft = moveY - moveX + turn * turnFactor;
+    double frontRight = 0.9 * (moveY - moveX - turn * turnFactor);
+    double backLeft = moveY + moveX + turn * turnFactor;
+    double backRight = 0.9 * (moveY + moveX - turn * turnFactor);
+
+    driveFL.move(frontLeft);
+    driveFR.move(frontRight);
+    driveBL.move(backLeft);
+    driveBR.move(backRight);
+  }
 }
 
 void checkMecanum() {
@@ -33,17 +47,34 @@ void checkMecanum() {
   translateY = 1/16129.0 * pow(translateY, 3);
 
   // Digital controls
-  if (bLeft && !bRight) {
-    translateX = -100;
-    turn += 18;
+
+  if (getYash() == "prius") {
+    if (bLeft && !bRight) {
+      translateX = -100;
+      turn += 20;
+    }
+    else if (bRight && !bLeft) {
+      translateX = 100;
+      turn -= 20;
+    }
+    else {
+      translateX = 0;
+    }
   }
-  else if (bRight && !bLeft) {
-    translateX = 100;
-    turn -= 18;
+  else if (getYash() == "918") {
+    if (bLeft && !bRight) {
+      translateX = -100;
+      turn += 40;
+    }
+    else if (bRight && !bLeft) {
+      translateX = 100;
+      turn -= 40;
+    }
+    else {
+      translateX = 0;
+    }
   }
-  else {
-    translateX = 0;
-  }
+
 
 
   driveMecanum(translateX, translateY, turn);

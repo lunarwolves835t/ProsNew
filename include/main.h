@@ -80,6 +80,7 @@ void opcontrol(void);
 #include "otheaders/arm.hpp"
 #include "otheaders/auton.hpp"
 #include "otheaders/mecanum.hpp"
+#include "otheaders/controller.hpp"
 
 //#include <iostream>
 #endif
