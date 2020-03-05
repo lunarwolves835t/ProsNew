@@ -10,6 +10,8 @@ void drive(double left, double right);
 
 void deploy();
 
+void deployNine();
+
 void killSwitch();
 
 void turn(int degrees, int Voltage);
